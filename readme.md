@@ -5,6 +5,14 @@
 * Whereas in `self._Board` it is a 1D array.
 * To convert between the two we need to use the `__GetIndexOfSquare` method found in the `Dastan` class.
 
+### Reference
+* Anything with the term `reference` e.g.
+  * `GetSquareReference`
+  * `StartSquareReference`
+  * `FinishSquareReference`
+* Looks like the following: `12`
+* It is an integer where the first digit is the `row` and the second digit is the `column`.
+
 #### Explaining the `__GetIndexOfSquare` method
 * What is `SquareReference`?
 * `SquareReference` is an 2 digit integer where the row is the first digit and the coloumn is the second digit.
@@ -48,8 +56,7 @@ Example:
 #     [' ', ' ', '!'],
 #     ['?', ' ', '!'],
 #     [' ', '?', '!'], R = 3, C = 2
-# ]
-
+# ] Row()
 # ACTUAL: [' ', ' ', '!', ' ', ' ', '!', '?', ' ', '!', ' ', '?', '!']
 ```
 23 which is the '!' on the second row (not zero based)
@@ -76,3 +83,32 @@ Index = (2-1) * 3 + (3-1) => 5 (which IS zero based in the actual list)
 * Create class like the `Kotla` class which inherits from `Square`.
 * Use `super` in constructor.
 * Then we **override** the `GetPointsForOccupancy` method.
+
+
+### Move options
+#### The difference between Dastan and Chess
+* In Chess we have different pieces and each has their own set of moves. 
+* In Dastan we have a generic piece but we have different moves that the pieces can do e.g.
+  * jazair
+  * chowkidar
+  * cuirassier
+  * ryott
+  * faujdar
+
+#### The `Move` class
+* `_RowChange` & `_ColumnChange` are just integers.
+* When passing in `R` & `C`, multiple by the `direction` to account for each player like in the `__CreateRyottMoveOption` method.
+
+#### The `MoveQueue` class
+* Using `Count` in The `GetQueueAsString` method.
+* It just displays the moves in the queue in the terminal.
+* Rewriting with `enumerate`:
+```python
+list = ['a','b','c']
+# enumerate(list) becomes [(0, 'a'), (1, 'b'), (2, 'c')]
+
+for idx, letter in enumerate(list):
+    # Each element is elem = (0, 'a')
+    # idx is 0
+    # letter is 'a'
+```

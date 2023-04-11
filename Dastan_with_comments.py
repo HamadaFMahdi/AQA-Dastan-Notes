@@ -137,8 +137,11 @@ class Dastan:
         self._CurrentPlayer.ChangeScore(self.__GetPointsForOccupancyByPlayer(self._CurrentPlayer) + PointsForPieceCapture)
 
     def __CalculatePieceCapturePoints(self, FinishSquareReference):
-        if self._Board[self.__GetIndexOfSquare(FinishSquareReference)].GetPieceInSquare() is not None:
-            return self._Board[self.__GetIndexOfSquare(FinishSquareReference)].GetPieceInSquare().GetPointsIfCaptured()
+        # FinishSquareReference
+        # Anything with Reference looks like: 12
+        captured_piece = self._Board[self.__GetIndexOfSquare(FinishSquareReference)].GetPieceInSquare()
+        if captured_piece is not None:
+            return captured_piece.GetPointsIfCaptured()
         return 0
 
     def PlayGame(self):
@@ -220,6 +223,7 @@ class Dastan:
         self._MoveOptionOffer.append("cuirassier")
         self._MoveOptionOffer.append("ryott")
         self._MoveOptionOffer.append("faujdar")
+        self._MoveOptionOffer.append("raj")
 
     def __CreateRyottMoveOption(self, Direction):
         NewMoveOption = MoveOption("ryott")
@@ -275,6 +279,18 @@ class Dastan:
         NewMoveOption.AddToPossibleMoves(NewMove)
         return NewMoveOption
 
+    def __CreateRajMoveOption(self, Direction):
+        NewMoveOption = MoveOption("raj")
+        NewMove = Move(2 * Direction, 2 * Direction)
+        NewMoveOption.AddToPossibleMoves(NewMove)
+        NewMove = Move(-2 * Direction, 2 * Direction)
+        NewMoveOption.AddToPossibleMoves(NewMove)
+        NewMove = Move(2 * Direction, -2 * Direction)
+        NewMoveOption.AddToPossibleMoves(NewMove)
+        NewMove = Move(-2 * Direction, -2 * Direction)
+        NewMoveOption.AddToPossibleMoves(NewMove)
+        return NewMoveOption
+
     def __CreateChowkidarMoveOption(self, Direction):
         NewMoveOption = MoveOption("chowkidar")
         NewMove = Move(1 * Direction, 1 * Direction)
@@ -300,6 +316,8 @@ class Dastan:
             return self.__CreateFaujdarMoveOption(Direction)
         elif Name == "jazair":
             return self.__CreateJazairMoveOption(Direction)
+        elif Name == "raj":
+            return self.__CreateRajMoveOption(Direction)
         else:
             return self.__CreateCuirassierMoveOption(Direction)
 
@@ -309,7 +327,9 @@ class Dastan:
         self._Players[0].AddToMoveOptionQueue(self.__CreateMoveOption("cuirassier", 1))
         self._Players[0].AddToMoveOptionQueue(self.__CreateMoveOption("faujdar", 1))
         self._Players[0].AddToMoveOptionQueue(self.__CreateMoveOption("jazair", 1))
+        self._Players[0].AddToMoveOptionQueue(self.__CreateMoveOption("raj", 1))
         self._Players[1].AddToMoveOptionQueue(self.__CreateMoveOption("ryott", -1))
+        self._Players[1].AddToMoveOptionQueue(self.__CreateMoveOption("raj", -1))
         self._Players[1].AddToMoveOptionQueue(self.__CreateMoveOption("chowkidar", -1))
         self._Players[1].AddToMoveOptionQueue(self.__CreateMoveOption("jazair", -1))
         self._Players[1].AddToMoveOptionQueue(self.__CreateMoveOption("faujdar", -1))
@@ -389,9 +409,11 @@ class Kotla(Square):
 class MoveOption:
     def __init__(self, N):
         self._Name = N
+        # _PossibleMoves is a list of Move objects.
         self._PossibleMoves = []
 
     def AddToPossibleMoves(self, M):
+        # M is an instance/object of Move.
         self._PossibleMoves.append(M)
 
     def GetName(self):
@@ -424,11 +446,15 @@ class MoveOptionQueue:
 
     def GetQueueAsString(self):
         QueueAsString = ""
-        Count = 1
-        for M in self.__Queue:
-            QueueAsString += str(Count) + ". " + M.GetName() + "   "
-            Count += 1
+        for idx, M in enumerate(self.__Queue):
+            QueueAsString += str(idx + 1) + ". " + M.GetName() + "   "
+        # Count = 1
+        # for M in self.__Queue:
+        #     QueueAsString += str(Count) + ". " + M.GetName() + "   "
+        #     Count += 1
         return QueueAsString
+
+
 
     def Add(self, NewMoveOption):
         self.__Queue.append(NewMoveOption)
