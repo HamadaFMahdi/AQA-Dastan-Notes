@@ -388,6 +388,10 @@ class Square:
 
 class Kotla(Square):
     def __init__(self, P, S):
+        # self._PieceInSquare = None
+        # self._BelongsTo = None
+        # self._Symbol = " "
+        # Using Super is the same as doing the 3 lines above.
         super(Kotla, self).__init__()
         self._BelongsTo = P
         self._Symbol = S
